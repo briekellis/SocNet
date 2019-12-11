@@ -1,0 +1,78 @@
+﻿@*@model IEnumerable<SocNet.Models.Event>*@
+@model PagedList.IPagedList<SocNet.Models.Event>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Events</h2>
+<section>
+    <p>
+        This is a page for posting public and private events. These are moderated, please make sure all postings are in compliance with <a href="~/Home/CG">community guidelines</a>.<br />
+        If a posting does not comply, it will be removed.<br />
+    </p>
+</section>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@using (Html.BeginForm("Index", "Event", FormMethod.Get))
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
+<table class="table">
+    <tr>
+        @*<th>
+                @Html.DisplayNameFor(model => model.EventTitle)
+            </th>*@
+        @*<th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>*@
+        @*<th>
+                @Html.DisplayNameFor(model => model.Cost)
+            </th>*@
+        @*<th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>*@
+        <th>
+            @Html.ActionLink("Event Title", "Index", new { sortOrder = ViewBag.NameSortParam1, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            @Html.ActionLink("Cost", "Index", new { sortOrder = ViewBag.NameSortParam2, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EventTitle)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.Cost)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>*@
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+            </td>
+        </tr>
+    }
+
+</table>
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
